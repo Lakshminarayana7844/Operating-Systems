@@ -1,0 +1,66 @@
+#include <stdio.h>
+int main() {
+    int pid[10];
+    int bt[10];
+    int n, quantum;
+    printf("Enter number of processes: ");
+    scanf("%d", &n);
+    printf("Enter the processes: ");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &pid[i]);
+    }
+    printf("Enter the burst times: ");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &bt[i]);
+    }
+    printf("Enter the time quantum: ");
+    scanf("%d", &quantum);
+    int remainingTime[10];
+    for (int i = 0; i < n; i++) {
+        remainingTime[i] = bt[i];
+    }
+    int t = 0;
+    int wt[10] = {0};
+    int tat[10] = {0};
+
+    while (1) {
+        int done = 1;
+        for (int i = 0; i < n; i++) {
+            if (remainingTime[i] > 0) {
+                done = 0;
+
+                if (remainingTime[i] > quantum) {
+                    t += quantum;
+                    remainingTime[i] -= quantum;
+                } else {
+                    t += remainingTime[i];
+                    wt[i] = t - bt[i];
+                    remainingTime[i] = 0;
+                }
+            }
+        }
+        if (done == 1) {
+            break;
+        }
+    }
+    for (int i = 0; i < n; i++) {
+        tat[i] = bt[i] + wt[i];
+    }
+    printf("processid  bursttime  waitingtime  turnaroundtime\n");
+    float twt = 0.0, ttat = 0.0;
+    for (int i = 0; i < n; i++) {
+        printf("%d\t\t", pid[i]);
+        printf("%d\t\t", bt[i]);
+        printf("%d\t\t", wt[i]);
+        printf("%d\t\t", tat[i]);
+        printf("\n");
+        twt += wt[i];
+        ttat += tat[i];
+    }
+    float awt, atat;
+    awt = twt / n;
+    atat = ttat / n;
+    printf("average waiting time = %f\n", awt);
+    printf("average turnaround time = %f\n", atat);
+    return 0;
+}
