@@ -1,0 +1,67 @@
+#include <stdio.h>
+
+int main() {
+    int nFramesize;
+
+    printf("Enter the number of frames: ");
+    scanf("%d", &nFramesize);
+
+    int frames[nFramesize];
+    for (int i = 0; i < nFramesize; i++) {
+        frames[i] = -1; // Initialize frames to -1 (indicating empty)
+    }
+
+    int n;
+
+    printf("Enter the number of pages: ");
+    scanf("%d", &n);
+
+    int pages[n];
+
+    printf("Enter the page reference string:\n");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &pages[i]);
+    }
+
+    int pageFaults = 0;
+
+    for (int i = 0; i < n; i++) {
+        int page = pages[i];
+        int pageFound = 0;
+
+        // Check if page is already in frames
+        for (int j = 0; j < nFramesize; j++) {
+            if (frames[j] == page) {
+                pageFound = 1;
+                break;
+            }
+        }
+
+        // If page is not in frames, perform page replacement
+        if (!pageFound) {
+            int lruIndex = 0; // Index of the least recently used page
+
+            // Find the least recently used page in frames
+            for (int j = 1; j < nFramesize; j++) {
+                if (frames[j] < frames[lruIndex]) {
+                    lruIndex = j;
+                }
+            }
+
+            // Replace the least recently used page with the current page
+            frames[lruIndex] = page;
+            pageFaults++;
+
+            // Print the current state of frames
+            printf("Frames: ");
+            for (int j = 0; j < nFramesize; j++) {
+                printf("%d ", frames[j]);
+            }
+            printf("\n")
+        }
+    }
+
+    printf("Total Page Faults: %d\n", pageFaults);
+
+    return 0;
+}
