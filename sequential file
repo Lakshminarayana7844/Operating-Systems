@@ -1,0 +1,39 @@
+#include <stdio.h>
+
+#define MAX_FILE_SIZE 1000
+
+int main() {
+    FILE *file;
+    char data[MAX_FILE_SIZE];
+
+    // Open the file for writing
+    file = fopen("sequential_file.txt", "w");
+
+    if (file == NULL) {
+        printf("Error opening file!\n");
+        return 1;
+    }
+
+    // Write data to the file
+    fprintf(file, "This is a sequential file allocation example.");
+
+    // Close the file
+    fclose(file);
+
+    // Open the file for reading
+    file = fopen("sequential_file.txt", "r");
+
+    if (file == NULL) {
+        printf("Error opening file!\n");
+        return 1;
+    }
+
+    // Read and print the data from the file
+    fgets(data, MAX_FILE_SIZE, file);
+    printf("Data read from file: %s\n", data);
+
+    // Close the file
+    fclose(file);
+
+    return 0;
+}
