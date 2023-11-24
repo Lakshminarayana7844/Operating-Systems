@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <pthread.h>
+
+#define MAX_NUMBER 100
+
+// Global variable to keep track of the current number
+int currentNumber = 1;
+
+// Mutex to synchronize access to the shared variable
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
+// Function to print odd numbers
+void *printOdd(void *arg) {
+    while (currentNumber <= MAX_NUMBER) {
+        // Lock the mutex before accessing the shared variable
+        pthread_mutex_lock(&mutex);
+
+        // Check if the current number is odd
+        if (currentNumber % 2 != 0) {
+            printf("Odd Thread: %d\n", currentNumber);
+            currentNumber++;
+        }
+
+        // Unlock the mutex after accessing the shared variable
+        pthread_mutex_unlock(&mutex);
+    }
+
+    pthread_exit(NULL);
+}
+
+// Function to print even numbers
+void *printEven(void *arg) {
+    while (currentNumber <= MAX_NUMBER) {
+        // Lock the mutex before accessing the shared variable
+        pthread_mutex_lock(&mutex);
+
+        // Check if the current number is even
+        if (currentNumber % 2 == 0) {
+            printf("Even Thread: %d\n", currentNumber);
+            currentNumber++;
+        }
+
+        // Unlock the mutex after accessing the shared variable
+        pthread_mutex_unlock(&mutex);
+    }
+
+    pthread_exit(NULL);
+}
+
+int main() {
+    pthread_t oddThread, evenThread;
+
+    // Create threads
+    pthread_create(&oddThread, NULL, printOdd, NULL);
+    pthread_create(&evenThread, NULL, printEven, NULL);
+
+    // Wait for threads to finish
+    pthread_join(oddThread, NULL);
+    pthread_join(evenThread, NULL);
+
+    return 0;
+}
